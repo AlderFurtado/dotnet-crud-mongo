@@ -8,26 +8,25 @@ namespace TicketsApi.Models
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        [BsonElement("Id")]
-        public string Id { get => Id; set => Id = value; }
+        public string Id { get; set; } 
 
         [BsonElement("Titulo")] 
-        public string Titulo { get => Titulo; set => Titulo = value; }
+        public string Titulo { get; set; }
 
         [BsonElement("Descricao")]
-        public string Descricao { get => Descricao; set => Descricao = value; }
+        public string Descricao { get; set; }
 
-        // [BsonElement("DataCriacao")]
-        // public DateTime DataCriacao { get => DataCriacao; set => DataCriacao = value; }
+        [BsonElement("DataCriacao")]
+        public DateTime? DataCriacao { get; set; } = DateTime.Now;
 
-        // [BsonElement("DataModificacao")]
-        // public DateTime DataModificacao { get => DataModificacao; set => DataModificacao = value; }
+        [BsonElement("DataModificacao")]
+        public DateTime? DataModificacao { get; set; }
 
-        // [BsonElement("Responsavel")]
-        // public string Responsavel { get => Responsavel; set => Responsavel = value; }
+        [BsonElement("Responsavel")]
+        public string Responsavel { get; set; }
 
-        // [BsonElement("Mensagem")]
-        // public string Mensagem { get => Mensagem; set => Mensagem = value; }
+        [BsonElement("Mensagem")]
+        public string Mensagem { get; set; }
         
         // public Ticket(){
         //     this.DataCriacao = new DateTime().ToLocalTime();

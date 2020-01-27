@@ -17,7 +17,7 @@ namespace Tickets
     {
         public Startup(IConfiguration configuration)
         {
-            
+
             Configuration = configuration;
         }
 
@@ -26,10 +26,12 @@ namespace Tickets
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-                services.Configure<TicketstoreDatabaseSettings>(
-            Configuration.GetSection(nameof(TicketstoreDatabaseSettings)));
-
-                services.AddSingleton<ITicketstoreDatabaseSettings>(sp =>
+            services.Configure<TicketstoreDatabaseSettings>(
+        Configuration.GetSection(nameof(TicketstoreDatabaseSettings)));
+            services.AddCors(options => options.AddPolicy("AllowAll", p => p.AllowAnyOrigin()
+                                                                                .AllowAnyMethod()
+                                                                                 .AllowAnyHeader()));
+            services.AddSingleton<ITicketstoreDatabaseSettings>(sp =>
                     sp.GetRequiredService<IOptions<TicketstoreDatabaseSettings>>().Value);
             services.AddControllers();
             services.AddScoped<TicketsService>();
@@ -43,6 +45,8 @@ namespace Tickets
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseCors("AllowAll");
 
             app.UseHttpsRedirection();
 

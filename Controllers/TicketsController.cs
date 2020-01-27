@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using TicketsApi.Models;
 using TicketsApi.Service;
@@ -16,8 +18,9 @@ namespace TicketsApi.Controller
         }
 
         [HttpGet]
-        public ActionResult<List<Ticket>> Get() =>
-            _ticketsService.Get();
+        public ActionResult<List<Ticket>> Get() {
+            return _ticketsService.Get();
+        }
 
         [HttpGet("{id:length(24)}", Name = "GetBook")]
         public ActionResult<Ticket> Get(string id)
@@ -40,8 +43,27 @@ namespace TicketsApi.Controller
             return CreatedAtRoute("GetBook", new { id = book.Id.ToString() }, book);
         }
 
+        [HttpPost("{id:length(24)}/addMessage")]
+        public ActionResult<Ticket> AddMessage(string id,Ticket ticketIn)
+        {
+            var ticket = _ticketsService.Get(id);
+
+
+            if (ticket == null)
+            {
+                return NotFound();
+            }
+
+            ticket.Mensagem = ticketIn.Mensagem;
+    
+            _ticketsService.Update(id, ticket);
+
+            return ticket;
+        }
+        
+
         [HttpPut("{id:length(24)}")]
-        public IActionResult Update(string id, Ticket ticketIn)
+        public ActionResult<Ticket> Update(string id, Ticket ticketIn)
         {
             var ticket = _ticketsService.Get(id);
 
@@ -49,10 +71,14 @@ namespace TicketsApi.Controller
             {
                 return NotFound();
             }
+            
+            ticketIn.Id = ticket.Id;
+            ticketIn.DataCriacao = ticket.DataCriacao;
+            ticketIn.DataModificacao = DateTime.Now;
 
             _ticketsService.Update(id, ticketIn);
 
-            return NoContent();
+            return ticketIn;
         }
 
         [HttpDelete("{id:length(24)}")]
